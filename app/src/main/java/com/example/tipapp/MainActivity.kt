@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,10 +57,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun TipApp(modifier: Modifier = Modifier) {
-    var textValue by remember { mutableStateOf("") }
+    var textValue by rememberSaveable { mutableStateOf("") }
     val amount = textValue.toDoubleOrNull() ?: 0.0
-    var tipPercent by remember { mutableStateOf("")}
-    var roundUp by remember { mutableStateOf(false) }
+    var tipPercent by rememberSaveable { mutableStateOf("")}
+    var roundUp by rememberSaveable { mutableStateOf(false) }
     val tipRate = tipPercent.toDoubleOrNull() ?: 0.0
     val tip = calculateTip(amount, tipPercent = tipRate, roundUp)
     val tipText = NumberFormat.getNumberInstance().format(tip)
