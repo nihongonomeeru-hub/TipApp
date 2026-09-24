@@ -52,6 +52,8 @@ fun TipApp(modifier: Modifier = Modifier) {
     var textValue by remember { mutableStateOf("") }
     val amount = textValue.toDoubleOrNull() ?: 0.0
     val tip = calculateTip(amount)
+    val tipText = NumberFormat.getNumberInstance().format(tip)
+    val total = tip + amount
     Column(
         modifier = modifier
             .statusBarsPadding()
@@ -75,10 +77,14 @@ fun TipApp(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
         )
         Text(
-            text = stringResource(R.string.tip_amount, tip),
+            text = stringResource(R.string.tip_amount, tipText),
             style = MaterialTheme.typography.displaySmall
         )
         Spacer(modifier.height(40.dp))
+        Text(
+            text = stringResource(R.string.total, total),
+            style = MaterialTheme.typography.displaySmall
+        )
     }
 }
 
@@ -98,9 +104,8 @@ fun EditNumberField(
     )
 }
 
-private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
-    val tip = tipPercent / 100 * amount
-    return NumberFormat.getNumberInstance().format(tip)
+private fun calculateTip(amount: Double, tipPercent: Double = 15.0): Double {
+    return tipPercent / 100 * amount
 }
 
 @Preview(showBackground = true)
