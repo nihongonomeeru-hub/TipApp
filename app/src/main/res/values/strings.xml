@@ -4,5 +4,4 @@
     <string name="bill_amount">Bill Amount</string>
     <string name="tip_amount">Tip Amount: %s</string>
     <string name="total">Total: %s</string>
-    <string name="tip_percentage">Tip Percentage</string>
 </resources>
