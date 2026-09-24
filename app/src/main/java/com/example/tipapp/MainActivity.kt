@@ -17,7 +17,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -32,7 +31,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tipapp.ui.theme.TipAppTheme
-import org.w3c.dom.Text
 import java.text.NumberFormat
 
 class MainActivity : ComponentActivity() {
@@ -51,7 +49,11 @@ class MainActivity : ComponentActivity() {
 fun TipApp(modifier: Modifier = Modifier) {
     var textValue by remember { mutableStateOf("") }
     val amount = textValue.toDoubleOrNull() ?: 0.0
-    val tip = calculateTip(amount)
+    var tipPercent by remember { mutableStateOf("")}
+    val tipRate = tipPercent.toDoubleOrNull() ?: 0.0
+    val tip = calculateTip(amount, tipPercent = tipRate)
+    val tipText = NumberFormat.getNumberInstance().format(tip)
+    val total = tip + amount
     Column(
         modifier = modifier
             .statusBarsPadding()
@@ -74,11 +76,25 @@ fun TipApp(modifier: Modifier = Modifier) {
                 .padding(bottom = 32.dp)
                 .fillMaxWidth()
         )
+        TextField(
+            value = tipPercent,
+            onValueChange = {tipPercent = it},
+            modifier = Modifier
+                .padding(bottom = 32.dp)
+                .fillMaxSize(),
+            label = {Text(stringResource( R.string.tip_percentage))},
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
         Text(
-            text = stringResource(R.string.tip_amount, tip),
+            text = stringResource(R.string.tip_amount, tipText),
             style = MaterialTheme.typography.displaySmall
         )
         Spacer(modifier.height(40.dp))
+        Text(
+            text = stringResource(R.string.total, total),
+            style = MaterialTheme.typography.displaySmall
+        )
     }
 }
 
@@ -98,9 +114,8 @@ fun EditNumberField(
     )
 }
 
-private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
-    val tip = tipPercent / 100 * amount
-    return NumberFormat.getNumberInstance().format(tip)
+private fun calculateTip(amount: Double, tipPercent: Double = 15.0): Double {
+    return tipPercent / 100 * amount
 }
 
 @Preview(showBackground = true)
